@@ -1,5 +1,20 @@
-<!-- PWA & Mobile Home Screen Icon -->
-<link rel="manifest" href="/site.webmanifest" />
-<link rel="apple-touch-icon" href="/icons.jpg" />
-<meta name="theme-color" content="#0B0E14" />
-
+{
+  "name": "Vaulta Digital Bank",
+  "short_name": "Vaulta",
+  "icons": [
+    {
+      "src": "/icons.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/icons.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B0E14",
+  "theme_color": "#0B0E14"
+}
