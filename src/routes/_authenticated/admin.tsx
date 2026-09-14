@@ -1,6 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -122,11 +121,11 @@ function UsersTab() {
   const queryClient = useQueryClient();
   const { data: accounts } = useQuery(adminAccountsQuery);
   const { data: profiles } = useQuery(adminProfilesQuery);
-  const fetchEmails = useServerFn(listMemberEmails);
-  const { data: emails } = useQuery({
+    const { data: emails } = useQuery({
     queryKey: ["admin", "emails"],
-    queryFn: () => fetchEmails({}),
+    queryFn: () => listMemberEmails(),
   });
+  
   const [editing, setEditing] = useState<string | null>(null);
   const [amount, setAmount] = useState("");
 
