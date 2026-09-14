@@ -16,8 +16,6 @@ const categories = [
 
 export function SupportModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const queryClient = useQueryClient();
-  const notify = useServerFn(sendSupportEmail);
-  await sendSupportEmail({ category, subject, message });
 
   const [category, setCategory] = useState<string>("general");
   const [subject, setSubject] = useState("");
@@ -42,8 +40,8 @@ export function SupportModal({ open, onClose }: { open: boolean; onClose: () => 
         message: message.trim(),
         category,
       });
-      await notify({ data: { ticketId: id } }).catch(() => null);
-      await queryClient.invalidateQueries({ queryKey: myTicketsQuery.queryKey });
+      await sendSupportEmail({ data: { ticketId: id } }).catch(() => null);
+    
       setSubject("");
       setMessage("");
       toast.success("Request sent — our team will reply by email");
