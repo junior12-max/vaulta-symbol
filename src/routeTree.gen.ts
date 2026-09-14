@@ -18,7 +18,6 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedFinancesRouteImport } from './routes/_authenticated/finances'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedTransferRouteImport } from './routes/_authenticated/transfer'
-import { Route as ApiPublicWebhooksPaymentsRouteImport } from './routes/api/public/webhooks/payments'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -64,12 +63,6 @@ const AuthenticatedTransferRoute = AuthenticatedTransferRouteImport.update({
   path: '/transfer',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const ApiPublicWebhooksPaymentsRoute =
-  ApiPublicWebhooksPaymentsRouteImport.update({
-    id: '/api/public/webhooks/payments',
-    path: '/api/public/webhooks/payments',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -80,7 +73,6 @@ export interface FileRoutesByFullPath {
   '/finances': typeof AuthenticatedFinancesRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/transfer': typeof AuthenticatedTransferRoute
-  '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -91,7 +83,6 @@ export interface FileRoutesByTo {
   '/finances': typeof AuthenticatedFinancesRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/transfer': typeof AuthenticatedTransferRoute
-  '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -104,7 +95,6 @@ export interface FileRoutesById {
   '/_authenticated/finances': typeof AuthenticatedFinancesRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/transfer': typeof AuthenticatedTransferRoute
-  '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -117,7 +107,6 @@ export interface FileRouteTypes {
     | '/finances'
     | '/profile'
     | '/transfer'
-    | '/api/public/webhooks/payments'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -128,7 +117,6 @@ export interface FileRouteTypes {
     | '/finances'
     | '/profile'
     | '/transfer'
-    | '/api/public/webhooks/payments'
   id:
     | '__root__'
     | '/'
@@ -140,14 +128,12 @@ export interface FileRouteTypes {
     | '/_authenticated/finances'
     | '/_authenticated/profile'
     | '/_authenticated/transfer'
-    | '/api/public/webhooks/payments'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
-  ApiPublicWebhooksPaymentsRoute: typeof ApiPublicWebhooksPaymentsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -215,13 +201,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTransferRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/api/public/webhooks/payments': {
-      id: '/api/public/webhooks/payments'
-      path: '/api/public/webhooks/payments'
-      fullPath: '/api/public/webhooks/payments'
-      preLoaderRoute: typeof ApiPublicWebhooksPaymentsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -250,18 +229,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
-  ApiPublicWebhooksPaymentsRoute: ApiPublicWebhooksPaymentsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
