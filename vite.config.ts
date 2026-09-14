@@ -7,5 +7,8 @@ export default defineConfig({
     react(),
     tsconfigPaths(),
   ],
+  build: {
+    cssMinify: 'esbuild',
+  },
   appType: 'spa',
 })
