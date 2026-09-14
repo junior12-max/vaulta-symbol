@@ -1,5 +1,4 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -18,7 +17,7 @@ const categories = [
 export function SupportModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const queryClient = useQueryClient();
   const notify = useServerFn(sendSupportEmail);
-  const { data: tickets } = useQuery({ ...myTicketsQuery, enabled: open });
+  await sendSupportEmail({ category, subject, message });
 
   const [category, setCategory] = useState<string>("general");
   const [subject, setSubject] = useState("");
