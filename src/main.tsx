@@ -6,14 +6,14 @@ import './styles.css'
 
 const router = getRouter()
 
-// Ensure router mounts cleanly on the client
-const rootElement = document.getElementById('root')!
+const rootElement = document.getElementById('root')
 
-if (!rootElement.innerHTML) {
-  const root = ReactDOM.createRoot(rootElement)
-  root.render(
-    <React.StrictMode>
-      <RouterProvider router={router} />
-    </React.StrictMode>,
-  )
+if (!rootElement) {
+  throw new Error('Root element #root was not found')
 }
+
+ReactDOM.createRoot(rootElement).render(
+  <React.StrictMode>
+    <RouterProvider router={router} />
+  </React.StrictMode>,
+)
