@@ -3,12 +3,6 @@ import react from '@vitejs/plugin-react'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
-  plugins: [
-    react(),
-    tsconfigPaths(),
-  ],
-  build: {
-    cssMinify: 'esbuild',
-  },
+  plugins: [react(), tsconfigPaths()],
   appType: 'spa',
 })
