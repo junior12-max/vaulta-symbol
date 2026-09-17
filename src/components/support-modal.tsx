@@ -16,6 +16,7 @@ const categories = [
 
 export function SupportModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const queryClient = useQueryClient();
+  const { data: tickets = [] } = useQuery(myTicketsQuery());
 
   const [category, setCategory] = useState<string>("general");
   const [subject, setSubject] = useState("");
@@ -41,7 +42,9 @@ export function SupportModal({ open, onClose }: { open: boolean; onClose: () => 
         category,
       });
       await sendSupportEmail({ data: { ticketId: id } }).catch(() => null);
-    
+
+      queryClient.invalidateQueries({ queryKey: ["my-tickets"] });
+
       setSubject("");
       setMessage("");
       toast.success("Request sent — our team will reply by email");
@@ -117,11 +120,11 @@ export function SupportModal({ open, onClose }: { open: boolean; onClose: () => 
           {sending ? "Sending…" : "Send request"}
         </button>
 
-        {(tickets ?? []).length > 0 && (
+        {tickets.length > 0 && (
           <div className="mt-5">
             <p className="label-caps mb-2">Your requests</p>
             <div className="divide-y divide-border rounded-xl ring-1 ring-border">
-              {(tickets ?? []).slice(0, 6).map((t) => (
+              {tickets.slice(0, 6).map((t) => (
                 <div key={t.id} className="px-3 py-3">
                   <div className="flex items-center justify-between gap-2">
                     <p className="truncate text-[13px] font-semibold">{t.subject}</p>
@@ -143,4 +146,5 @@ export function SupportModal({ open, onClose }: { open: boolean; onClose: () => 
       </div>
     </div>
   );
-}
+          }
+          
