@@ -50,3 +50,12 @@ ${ticket.message}`;
     return { sent: false, reason: "send_failed" as const, ticketId: ticket.id };
   }
         }
+export async function listMemberEmails() {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id, email");
+
+  if (error) throw error;
+  return data ?? [];
+      }
+      
