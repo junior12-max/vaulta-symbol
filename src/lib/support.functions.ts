@@ -1,12 +1,12 @@
 import { supabase } from "@/integrations/supabase/client";
 
-interface TicketPayload {
-  data: {
-    ticketId: string;
-  };
-}
-
-export async function sendSupportEmail(payload: TicketPayload) {
+/**
+ * Emails the support inbox when a member files a ticket.
+ * Sending goes through Lovable's managed email API; until a sender domain is
+ * verified this returns { sent: false } instead of throwing, so filing a
+ * ticket never fails because of email configuration.
+ */
+export async function sendSupportEmail(payload: { data: { ticketId: string } }) {
   const ticketId = payload?.data?.ticketId;
   if (!ticketId) throw new Error("ticketId is required");
 
@@ -19,15 +19,17 @@ export async function sendSupportEmail(payload: TicketPayload) {
   if (error) throw error;
   if (!ticket) return { sent: false, reason: "ticket_not_found" as const };
 
-  const to = process.env.SUPPORT_INBOX;
-  const from = process.env.SUPPORT_FROM_ADDRESS;
-  const apiKey = process.env.LOVABLE_API_KEY;
-
+  const to = process.env["SUPPORT_INBOX"];
+  const from = process.env["SUPPORT_FROM_ADDRESS"];
+  const apiKey = process.env["LOVABLE_API_KEY"];
   if (!to || !from || !apiKey) {
     return { sent: false, reason: "email_not_configured" as const, ticketId };
   }
 
-  const body = `Category: ${ticket.category}\nFrom: ${ticket.contact_email ?? "unknown"}\n\n${ticket.message}`;
+  const body = `Category: ${ticket.category}
+From: ${ticket.contact_email ?? "unknown"}
+
+${ticket.message}`;
 
   try {
     const { sendLovableEmail } = await import("@lovable.dev/email-js");
@@ -55,6 +57,14 @@ export async function listMemberEmails() {
     .select("id, email");
 
   if (error) throw error;
-  return data ?? [];
-}
-  
+
+  const emailMap: Record<string, string> = {};
+  (data ?? []).forEach((profile: { id: string; email?: string | null }) => {
+    if (profile.id && profile.email) {
+      emailMap[profile.id] = profile.email;
+    }
+  });
+
+  return emailMap;
+      }
+                                  
