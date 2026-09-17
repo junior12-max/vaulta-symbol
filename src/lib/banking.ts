@@ -49,8 +49,11 @@ export function splitBalance(cents: number) {
   return { whole: whole.toLocaleString("en-US"), frac };
 }
 
-export function relativeTime(iso: string) {
+export function relativeTime(iso?: string | null) {
+  if (!iso) return "—";
   const date = new Date(iso);
+  if (isNaN(date.getTime())) return "—";
+
   const now = new Date();
   const time = date.toLocaleTimeString("en-US", {
     hour: "2-digit",
@@ -377,4 +380,5 @@ export async function setAccountBalance(accountId: string, balanceCents: number)
     .update({ balance_cents: balanceCents })
     .eq("id", accountId);
   if (error) throw error;
-}
+  }
+                            
