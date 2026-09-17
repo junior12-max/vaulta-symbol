@@ -50,15 +50,21 @@ function AdminPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isLoading && isAdmin === false) navigate({ to: "/dashboard", replace: true });
+    if (!isLoading && !isAdmin) {
+      navigate({ to: "/" as any, replace: true });
+    }
   }, [isAdmin, isLoading, navigate]);
 
-  if (isLoading || !isAdmin) {
+  if (isLoading) {
     return (
       <AppShell>
         <p className="text-sm text-muted">Checking permissions…</p>
       </AppShell>
     );
+  }
+
+  if (!isAdmin) {
+    return null;
   }
 
   return <AdminConsole />;
@@ -121,11 +127,17 @@ function UsersTab() {
   const queryClient = useQueryClient();
   const { data: accounts } = useQuery(adminAccountsQuery);
   const { data: profiles } = useQuery(adminProfilesQuery);
-    const { data: emails } = useQuery({
+  const { data: emails } = useQuery({
     queryKey: ["admin", "emails"],
-    queryFn: () => listMemberEmails(),
+    queryFn: async () => {
+      try {
+        return await listMemberEmails();
+      } catch {
+        return {} as Record<string, string>;
+      }
+    },
   });
-  
+
   const [editing, setEditing] = useState<string | null>(null);
   const [amount, setAmount] = useState("");
 
@@ -398,4 +410,5 @@ function ActivityTab() {
       </div>
     </section>
   );
-}
+    }
+          
