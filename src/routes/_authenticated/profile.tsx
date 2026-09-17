@@ -76,7 +76,7 @@ function ProfilePage() {
       <section>
         <div className="panel flex animate-rise items-center gap-4 p-5">
           <span className="grid size-14 place-items-center rounded-full bg-accent-soft font-mono text-sm text-accent ring-1 ring-border">
-            {initials(profile?.full_name)}
+            {initials(profile?.full_name ?? "")}
           </span>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
